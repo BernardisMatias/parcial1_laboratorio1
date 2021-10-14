@@ -22,3 +22,10 @@ float ObtenerPpTotalPorPedido(eRecoleccion listaRecoleccion[], int tamRecoleccio
 float ObtenerTotalCantidadKgPp(eRecoleccion listaRecoleccion[], int tamRecoleccion);
 int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaClientes[], int tamPedidos, int tamClientes);
 int ObtenerKgPropilenoPromedioPorCliente(eRecoleccion listaRecoleccion[], eCliente listaClientes[], int tamRecoleccion, int tamClientes);
+
+
+
+int MostrarClienteConMasPedidosPendientes(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos);
+int CantidadPedidosPendientesPorCliente(ePedido listaPedidos[], int tamPedidos, int idCliente);
+int MostrarClienteConMasPedidosCompletados(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos);
+int MostrarClienteConMasPedidosEnTotal(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos);

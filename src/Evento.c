@@ -147,19 +147,67 @@ int MostrarClienteConMasPedidosPendientes(eCliente listaClientes[], ePedido list
 	int maximo = 0;
 	int actual = 0;
 	eCliente clienteActual;
-	printf("\tCliente con mas pedidos pendientes:\n");
-
-	for(int i=0;i<tamClientes;i++){
-		for(int j=0;j<tamPedidos;j++){
-			if(listaPedidos[j].idCliente == listaClientes[i].id
-					&& strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
-				actual++;
-			}
+	for(int j=0;j<tamPedidos;j++){
+		if(listaPedidos[j].isEmpty == FULL
+				&& strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
+			actual = CantidadPedidosPendientesPorCliente(listaPedidos, tamPedidos, listaPedidos[j].idCliente);
 		}
 		if(flag == 0 || actual > maximo){
-			actual = maximo;
-			clienteActual = listaClientes[i];
+			maximo = actual;
+			clienteActual = ObtenerClientePorId(listaClientes, tamClientes, listaPedidos[j].idCliente);
+			result = 0;
 		}
+	}
+	if(maximo != 0){
+		printf("\nCliente con mas pedidos pendientes: \n");
+		MostrarCliente(clienteActual);
+	}
+    return result;
+}
+
+int MostrarClienteConMasPedidosCompletados(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
+	int result = -1;
+	int flag = 0;
+	int maximo = 0;
+	int actual = 0;
+	eCliente clienteActual;
+	for(int j=0;j<tamPedidos;j++){
+		if(listaPedidos[j].isEmpty == FULL
+				&& strcmp(listaPedidos[j].estado, "COMPLETADO") == 0){
+			actual = CantidadPedidosPendientesPorCliente(listaPedidos, tamPedidos, listaPedidos[j].idCliente);
+		}
+		if(flag == 0 || actual > maximo){
+			maximo = actual;
+			clienteActual = ObtenerClientePorId(listaClientes, tamClientes, listaPedidos[j].idCliente);
+			result = 0;
+		}
+	}
+	if(maximo != 0){
+		printf("\nCliente con mas pedidos completados: \n");
+		MostrarCliente(clienteActual);
+	}
+    return result;
+}
+
+int MostrarClienteConMasPedidosEnTotal(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
+	int result = -1;
+	int flag = 0;
+	int maximo = 0;
+	int actual = 0;
+	eCliente clienteActual;
+	for(int j=0;j<tamPedidos;j++){
+		if(listaPedidos[j].isEmpty == FULL){
+			actual = CantidadPedidosPendientesPorCliente(listaPedidos, tamPedidos, listaPedidos[j].idCliente);
+		}
+		if(flag == 0 || actual > maximo){
+			maximo = actual;
+			clienteActual = ObtenerClientePorId(listaClientes, tamClientes, listaPedidos[j].idCliente);
+			result = 0;
+		}
+	}
+	if(maximo != 0){
+		printf("\nCliente con mas pedidos en total: \n");
+		MostrarCliente(clienteActual);
 	}
     return result;
 }
@@ -167,9 +215,8 @@ int MostrarClienteConMasPedidosPendientes(eCliente listaClientes[], ePedido list
 int CantidadPedidosPendientesPorCliente(ePedido listaPedidos[], int tamPedidos, int idCliente){
 	int result = 0;
 	for(int i=0;i<tamPedidos;i++){
-		if(listaPedidos[i].isEmpty == FULL
-				&& strcmp(listaPedidos[i].estado, "PENDIENTE") == 0
-					&&  listaPedidos[i].idCliente == idCliente){
+		if(listaPedidos[i].idCliente == idCliente
+				&& strcmp(listaPedidos[i].estado, "PENDIENTE") == 0){
 			result++;
 		}
 	}

@@ -34,7 +34,12 @@ int main(void) {
 		printf("8. Mostrar lista de PEDIDOS 'COMPLETADOS'\n");
 		printf("9. Mostrar cantidad de PEDIDOS 'PENDIENTES' por localidad ingresada\n");
 		printf("10. Mostrar PROMEDIO de Kg. de Polipropileno/CLIENTE\n");
-		if(GetEntero(&opcion, "Elija una opcion: ", 1, 11, 15) == -1){
+		printf("\n\n");
+		printf("\nExtra\n");
+		printf("11. Cliente con más pedidos 'PENDIENTES'\n");
+		printf("12. Cliente con más pedidos 'COMPLETADOS'\n");
+		printf("13. Cliente con más PEDIDOS\n");
+		if(GetEntero(&opcion, "Elija una opcion: ", 1, 14, 15) == -1){
 			break;
 		}
 		switch(opcion){
@@ -98,13 +103,28 @@ int main(void) {
 				}
 				break;
 			case 11:
-				printf("\nGracias!");
+				if(MostrarClienteConMasPedidosPendientes(listaClientes, listaPedidos, TAM_CLIENTES, TAM_PEDIDOS) == -1){
+					printf("\nOcurrio un error en cliente con pedidos pendientes\n");
+				}
+				break;
+			case 12:
+				if(MostrarClienteConMasPedidosCompletados(listaClientes, listaPedidos, TAM_CLIENTES, TAM_PEDIDOS) == -1){
+					printf("\nOcurrio un error en cliente con pedidos completados\n");
+				}
+				break;
+			case 13:
+				if(MostrarClienteConMasPedidosEnTotal(listaClientes, listaPedidos, TAM_CLIENTES, TAM_PEDIDOS) == -1){
+					printf("\nOcurrio un error en cliente con pedidos en total\n");
+				}
+				break;
+			case 14:
+				printf("\nGracias!\n");
 				break;
 			default:
 				printf("\nPor favor ingrese una opcion valida");
 				break;
 		}
-	}while(opcion!=11);
+	}while(opcion!=14);
 
 	return EXIT_SUCCESS;
 }
