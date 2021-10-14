@@ -141,6 +141,41 @@ int MostrarListaClientesPedidos(eCliente listaClientes[], ePedido listaPedidos[]
     return result;
 }
 
+int MostrarClienteConMasPedidosPendientes(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
+	int result = -1;
+	int flag = 0;
+	int maximo = 0;
+	int actual = 0;
+	eCliente clienteActual;
+	printf("\tCliente con mas pedidos pendientes:\n");
+
+	for(int i=0;i<tamClientes;i++){
+		for(int j=0;j<tamPedidos;j++){
+			if(listaPedidos[j].idCliente == listaClientes[i].id
+					&& strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
+				actual++;
+			}
+		}
+		if(flag == 0 || actual > maximo){
+			actual = maximo;
+			clienteActual = listaClientes[i];
+		}
+	}
+    return result;
+}
+
+int CantidadPedidosPendientesPorCliente(ePedido listaPedidos[], int tamPedidos, int idCliente){
+	int result = 0;
+	for(int i=0;i<tamPedidos;i++){
+		if(listaPedidos[i].isEmpty == FULL
+				&& strcmp(listaPedidos[i].estado, "PENDIENTE") == 0
+					&&  listaPedidos[i].idCliente == idCliente){
+			result++;
+		}
+	}
+	return result;
+}
+
 int MostrarPedidosPendientes(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
     int result = -1;
     printf("\tCUIT\t\t\tDireccion\t\tCant. Kg a recolectar\n");
@@ -150,7 +185,6 @@ int MostrarPedidosPendientes(eCliente listaClientes[], ePedido listaPedidos[], i
     		MostrarPedidoPendiente(aux.cuit, aux.direccion, listaPedidos[i].kilosTotales);
     		result = 0;
     	}
-
     }
     return result;
 }
@@ -233,7 +267,7 @@ int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaC
 	}
 	printf("\n\tLocalidad\t\t\tCant. pedidos\n");
 	for(int i=0;i<tamClientes;i++){
-		if(stricmp(listaClientes[i].localidad, localidadAux) == 0){
+		if(stricmp(listaClientes[i].localidad.descripcion, localidadAux) == 0){
 			for(int j=0;j<tamPedidos;j++){
 				if(listaPedidos[j].idCliente == listaClientes[i].id
 						&& strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
@@ -241,7 +275,7 @@ int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaC
 					acum++;
 				}
 			}
-			strcpy(localidadEnLista, listaClientes[i].localidad);
+			strcpy(localidadEnLista, listaClientes[i].localidad.descripcion);
 		}
 	}
 	if(acum != 0){

@@ -6,13 +6,14 @@
 #define TAM_LOCALIDAD 150
 #define CLIENTE_INIT_ID 100000
 #define MAX_ID_VALUE  100100
+#include "localidad.h"
 
 typedef struct{
   int id;
   char razonSocial[TAM_RAZON_SOCIAL];
   char cuit[TAM_CUIT];
   char direccion[TAM_DIRECCION];
-  char localidad[TAM_LOCALIDAD];
+  eLocalidad localidad;
   int isEmpty;
 } eCliente;
 
