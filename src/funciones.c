@@ -20,16 +20,12 @@ float GetFlotante(float* destino, char mensaje[], float menor, float mayor, int 
 int GetEntero(int* destino, char mensaje[], int menor, int mayor, int reintentos){
 	int result = -1;
 	int aux;
-	char cadenaAux[99];
 	do{
 		fflush(stdin);
 		printf("%s", mensaje);
 		scanf("%d", &aux);
-		itoa(*destino,cadenaAux,10);
 		if(aux > mayor || aux < menor){
 			printf("\nNumero invalido. Por favor ingrese un numero entre %d y %d\n", menor, mayor);
-		} else if(StringEsSoloNumeros(cadenaAux) != 1){
-			printf("\nNumero invalido. Por favor ingrese un solo numeros\n");
 		} else {
 			*destino = aux;
 			result = 0;

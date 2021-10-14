@@ -60,7 +60,7 @@ int ProcesarResiduos(eRecoleccion listaRecoleccion[], ePedido listaPedidos[], eC
 
 int InicioProcesarResiduos(ePedido listaPedidos[], eRecoleccion listaRecoleccion[], ePedido pedido, eTipoMaterial listaTipoMaterial[], int tamRecoleccion, int tamMateriales, int tamPedidos, int* idRecoleccion){
 	int idTipoMaterialAux, opcion, i=0, result = -1;
-	float kgIngresadosAux, kgRestantes, kgAcum = 0;
+	float kgIngresadosAux, kgRestantes = 0, kgAcum = 0;
 	eRecoleccion item;
 	do{
 		MostrarTiposMateriales(listaTipoMaterial, tamMateriales);
