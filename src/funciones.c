@@ -20,11 +20,16 @@ float GetFlotante(float* destino, char mensaje[], float menor, float mayor, int 
 int GetEntero(int* destino, char mensaje[], int menor, int mayor, int reintentos){
 	int result = -1;
 	int aux;
+	char cadenaAux[99];
 	do{
+		fflush(stdin);
 		printf("%s", mensaje);
 		scanf("%d", &aux);
+		itoa(*destino,cadenaAux,10);
 		if(aux > mayor || aux < menor){
 			printf("\nNumero invalido. Por favor ingrese un numero entre %d y %d\n", menor, mayor);
+		} else if(StringEsSoloNumeros(cadenaAux) != 1){
+			printf("\nNumero invalido. Por favor ingrese un solo numeros\n");
 		} else {
 			*destino = aux;
 			result = 0;
@@ -43,7 +48,7 @@ int GetCuit(char* cuitObjetivo, char mensaje[], int reintentos){
 		printf("%s", mensaje);
 		gets(cuitAux);
 		if(ValidarCuit(cuitAux) == 0){
-			//FormatearCuit(cuitAux);
+			FormatearCuit(cuitAux);
 			result = 0;
 			strcpy(cuitObjetivo, cuitAux);
 			break;
@@ -54,10 +59,10 @@ int GetCuit(char* cuitObjetivo, char mensaje[], int reintentos){
 }
 
 void FormatearCuit(char cuit[]){
-	char cuitAux[13];
+	char cuitAux[15];
 	cuitAux[0] = cuit[0];
 	cuitAux[1] = cuit[1];
-	cuitAux[2] = 'c';
+	cuitAux[2] = '-';
 	cuitAux[3] = cuit[2];
 	cuitAux[4] = cuit[3];
 	cuitAux[5] = cuit[4];
@@ -66,9 +71,9 @@ void FormatearCuit(char cuit[]){
 	cuitAux[8] = cuit[7];
 	cuitAux[9] = cuit[8];
 	cuitAux[10] = cuit[9];
-	cuitAux[11] = 'c';
+	cuitAux[11] = '-';
 	cuitAux[12] = cuit[10];
-	strcat(cuit, cuitAux);
+	strcpy(cuit, cuitAux);
 }
 
 int ValidarCuit(char* cuit){
@@ -171,6 +176,10 @@ int StringContieneLetras(char cadena[]){
 		}
 	}
 	return result;
+}
+
+int StringEsSoloNumeros(char cadena[]){
+	return !StringContieneLetras(cadena);
 }
 
 int EsSring(char cadena[]){

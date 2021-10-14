@@ -19,6 +19,10 @@ int CrearPedido(ePedido listaPedidos[], eCliente listaClientes[], int tamPedido,
 			if(GetEntero(&listaPedidos[index].idCliente, "Ingrese ID de Cliente: ", CLIENTE_INIT_ID, MAX_ID_VALUE, MAX_INTENTOS) == -1){
 				break;
 			}
+			if(GetPosicionPorId(listaClientes, tamClientes, listaPedidos[index].idCliente) == -1){
+				printf("\nCliente inexistente.\n");
+				break;
+			}
 			if(GetFlotante(&listaPedidos[index].kilosTotales, "Ingrese cantidad total de kilos a reciclar: ", MIN_KILOS, MAX_KILOS, MAX_INTENTOS) == -1){
 				break;
 			}
@@ -223,6 +227,7 @@ float ObtenerTotalCantidadKgPp(eRecoleccion listaRecoleccion[], int tamRecolecci
 int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaClientes[], int tamPedidos, int tamClientes){
 	int result = -1, acum = 0;
 	char localidadAux[TAM_LOCALIDAD];
+	char localidadEnLista[TAM_LOCALIDAD];
 	if(GetString(localidadAux, "\nIngrese localidad: ", "Error. Localidad invalida", TAM_LOCALIDAD, 5) == -1){
 		return result;
 	}
@@ -230,15 +235,17 @@ int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaC
 	for(int i=0;i<tamClientes;i++){
 		if(stricmp(listaClientes[i].localidad, localidadAux) == 0){
 			for(int j=0;j<tamPedidos;j++){
-				if(listaPedidos[j].idCliente == listaClientes[i].id){
+				if(listaPedidos[j].idCliente == listaClientes[i].id
+						&& strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
 					result = 0;
 					acum++;
 				}
 			}
+			strcpy(localidadEnLista, listaClientes[i].localidad);
 		}
 	}
 	if(acum != 0){
-		printf("\t%s\t\t\t%d\n\n", localidadAux, acum);
+		printf("\t%s\t\t\t%d\n\n", localidadEnLista, acum);
 	}
 	return result;
 }

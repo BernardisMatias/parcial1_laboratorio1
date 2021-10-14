@@ -3,19 +3,19 @@
 
 void CargarDatosHardcodedCliente(eCliente listaClientes[], int tam){
 	int index;
-	eCliente item = {100001, "CAPUCCHINOS S.A.", "30-1234578-2", "Avenida Siempre Viva 425", "Springfield", FULL};
+	eCliente item = {100096, "GRUPO ARCOR SOCIEDAD ANONIMA", "30-70700639-7", "Maipu 1210", "Buenos Aires", FULL};
 	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
 	listaClientes[index] = item;
-	eCliente item2 = {100002, "APPLE S.A.", "30-1245348-2", "Av. Patricios 2000", "Shelbiville", FULL};
+	eCliente item2 = {100097, "MERCADO LIBRE LTDA", "30-70988914-8", "Arias 3751", "Buenos Aires", FULL};
 	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
 	listaClientes[index] = item2;
-	eCliente item3 = {100003, "COCA COLA S.A.", "30-1234238-2", "Av. Roque Saenz Pena 555", "Brandsen", FULL};
+	eCliente item3 = {100098, "TOYOTA ARGENTINA S A", "33-67913936-9", "Ruta 12 km 81", "Zarate", FULL};
 	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
 	listaClientes[index] = item3;
-	eCliente item4 = {100004, "ARCOS DORADOS S.A.", "30-1442278-2", "Av. San Martin 428", "San Isidro", FULL};
+	eCliente item4 = {100099, "GOOGLE ARGENTINA S.R.L.", "33-70958522-9", "Av. Alicia Moreau Justo 350", "CABA", FULL};
 	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
 	listaClientes[index] = item4;
-	eCliente item5 = {100005, "VILLAVICENCIO S.A.", "30-6554478-2", "Av. De los Andes 20003", "Villa canas", FULL};
+	eCliente item5 = {100100, "UNILEVER DE ARGENTINA S A", "30-50109269-6", "Tucuman 1", "Buenos Aires", FULL};
 	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
 	listaClientes[index] = item5;
 }
@@ -37,7 +37,7 @@ int GetCantidadTotalClientes(eCliente listaClientes[], int tam){
 }
 
 void MostrarCliente(eCliente cliente){
-  printf("%10d %25s %15s %28s %23s\n", cliente.id, cliente.razonSocial, cliente.cuit, cliente.direccion, cliente.localidad);
+  printf("%10d %33s %15s %28s %23s\n", cliente.id, cliente.razonSocial, cliente.cuit, cliente.direccion, cliente.localidad);
 }
 
 void MostrarClientePedido(eCliente cliente, int pedidosPendientes){
@@ -111,7 +111,7 @@ int GetPosicionPorId(eCliente listaClientes[], int tam, int id){
 
 int MostrarListaClientes(eCliente listaClientes[], int tam){
     int retorno = -1;
-    printf("\tID\t\tRazon Social\t\tCUIT\t\t\tDireccion\t\tLocalidad\n");
+    printf("\tID\t\t\tRazon Social\t\tCUIT\t\t\tDireccion\t\tLocalidad\n");
     for (int i = 0; i < tam; i++){
       if (listaClientes[i].isEmpty == FULL){
     	  MostrarCliente(listaClientes[i]);
@@ -129,6 +129,10 @@ int ModificarCliente(eCliente listaClientes[], int tam){
 		return retorno;
 	}
 	posAux = GetPosicionPorId(listaClientes, tam, idCliente);
+	if(posAux == -1){
+		printf("\nCliente inexistente.");
+		return retorno;
+	}
 	if(muestraListaClientes == 0){
 		setbuf(stdout, NULL);
 		printf("\nSe pueden modificar:");
@@ -158,6 +162,7 @@ int BorrarCliente(eCliente listaClientes[], int tam){
    int idCliente, opcion;
    int result = 0;
    if(MostrarListaClientes(listaClientes, tam) == 0){
+	   fflush(stdin);
 	  if(GetEntero(&idCliente,"Ingrese ID del cliente a borrar: ", CLIENTE_INIT_ID, MAX_ID_VALUE, 5) == 0){
 		  int posAux = GetPosicionPorId(listaClientes, tam, idCliente);
 		  if(posAux != -1){
@@ -171,10 +176,10 @@ int BorrarCliente(eCliente listaClientes[], int tam){
 				   result = 1;
 			  }
 		  } else {
-			  printf("\nError. Cliente inexistente. 1");
+			  printf("\nError. Cliente inexistente.");
 		  }
 	  } else{
-		  printf("\nError. Cliente inexistente. 2");
+		  printf("\nError. Cliente inexistente.");
 	  }
    } else{
 	  printf("\nLa lista de clientes esta vacia.");

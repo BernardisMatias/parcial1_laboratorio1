@@ -32,7 +32,7 @@ int main(void) {
 		printf("6. Mostrar lista de CLIENTES\n");
 		printf("7. Mostrar lista de PEDIDOS 'PENDIENTES'\n");
 		printf("8. Mostrar lista de PEDIDOS 'COMPLETADOS'\n");
-		printf("9. Mostrar cantidad de PEDIDOS por localidad ingresada\n");
+		printf("9. Mostrar cantidad de PEDIDOS 'PENDIENTES' por localidad ingresada\n");
 		printf("10. Mostrar PROMEDIO de Kg. de Polipropileno/CLIENTE\n");
 		if(GetEntero(&opcion, "Elija una opcion: ", 1, 11, 15) == -1){
 			break;
@@ -45,7 +45,7 @@ int main(void) {
 				} else if(resultAlta == -1){
 					puts("La lista de clientes esta llena.\n");
 				} else {
-					puts("El producto no pudo cargarse.\n");
+					puts("El cliente no pudo cargarse.\n");
 				}
 				break;
 			case 2:
@@ -63,7 +63,7 @@ int main(void) {
 				}
 				break;
 			case 4:
-				if(CrearPedido(listaPedidos, listaClientes, TAM_PEDIDOS, TAM_CLIENTES, &idPedidos)){
+				if(CrearPedido(listaPedidos, listaClientes, TAM_PEDIDOS, TAM_CLIENTES, &idPedidos) == 0){
 					printf("Se creo pedido correctamente\n");
 				}
 			   break;
@@ -104,7 +104,7 @@ int main(void) {
 				printf("\nPor favor ingrese una opcion valida");
 				break;
 		}
-	}while(opcion!=10);
+	}while(opcion!=11);
 
 	return EXIT_SUCCESS;
 }

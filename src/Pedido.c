@@ -4,18 +4,15 @@
 
 void CargarDatosHardcodedPedido(ePedido listaPedidos[], int tam){
 	int index;
-	ePedido item = {200019, 100039, 500, "PENDIENTE", {}, 0, FULL};
+	ePedido item = {200099, 100100, 500, "PENDIENTE", {}, 0, FULL};
 	index = ObtenerPrimerEspacioLibrePedidos(listaPedidos, tam);
 	listaPedidos[index] = item;
-	ePedido item2 = {200042, 100039, 200, "PENDIENTE", {}, 0, FULL};
+	ePedido item2 = {200098, 100097, 200, "PENDIENTE", {}, 0, FULL};
 	index = ObtenerPrimerEspacioLibrePedidos(listaPedidos, tam);
 	listaPedidos[index] = item2;
-	ePedido item3 = {200048, 100049, 200, "PENDIENTE", {}, 0, FULL};
+	ePedido item3 = {200097, 100097, 200, "PENDIENTE", {}, 0, FULL};
 	index = ObtenerPrimerEspacioLibrePedidos(listaPedidos, tam);
 	listaPedidos[index] = item3;
-	//ePedido item4 = {200044, 100019, 450, "COMPLETADO", {300001, 300002}, 2, FULL};
-	//index = ObtenerPrimerEspacioLibrePedidos(listaPedidos, tam);
-	//listaPedidos[index] = item4;
 }
 
 void inicializarListaPedido(ePedido listaPedidos[], int tam){

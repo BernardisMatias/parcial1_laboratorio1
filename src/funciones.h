@@ -16,3 +16,4 @@ int ValidarCuit(char* cuit);
 int StringContieneLetras(char cadena[]);
 int AutoIncrementarId(int* id);
 void FormatearCuit(char cuit[]);
+int StringEsSoloNumeros(char cadena[]);
