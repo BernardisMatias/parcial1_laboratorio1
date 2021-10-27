@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "evento.h"
@@ -14,11 +15,14 @@ int main(void) {
 	ePedido listaPedidos[TAM_PEDIDOS];
 	eRecoleccion listaRecoleccion[TAM_RECOLECCION];
 	eTipoMaterial listaTipoMaterial[TAM_TIPO_MATERIAL];
+	eLocalidad listaLocalidad[TAM_LISTA_LOCALIDAD];
+
 	inicializarListaClientes(listaClientes, TAM_CLIENTES);
 	inicializarListaPedido(listaPedidos, TAM_PEDIDOS);
 	inicializarListaRecoleccion(listaRecoleccion, TAM_RECOLECCION);
 	InicializarListaTipoMaterial(listaTipoMaterial, TAM_TIPO_MATERIAL);
-	CargarDatosHardcoded(listaPedidos, listaClientes, listaRecoleccion, listaTipoMaterial, TAM_CLIENTES, TAM_PEDIDOS, TAM_RECOLECCION, TAM_TIPO_MATERIAL);
+	CargarDatosHardcoded(listaPedidos, listaClientes, listaRecoleccion, listaTipoMaterial, listaLocalidad, TAM_CLIENTES, TAM_PEDIDOS, TAM_RECOLECCION, TAM_TIPO_MATERIAL, TAM_LISTA_LOCALIDAD);
+
 
 	do{
 		printf("-- SISTEMA DE RECICLADO DE PLASTICO --\n");
@@ -44,7 +48,7 @@ int main(void) {
 		}
 		switch(opcion){
 			case 1:
-				resultAlta = AltaCliente(listaClientes, TAM_CLIENTES, &idCliente);
+				resultAlta = AltaCliente(listaClientes, listaLocalidad, TAM_CLIENTES, TAM_LISTA_LOCALIDAD, &idCliente);
 				if(resultAlta == 0){
 					puts("El cliente se cargo exitosamente.\n");
 				} else if(resultAlta == -1){
@@ -54,21 +58,21 @@ int main(void) {
 				}
 				break;
 			case 2:
-				if(ModificarCliente(listaClientes, TAM_CLIENTES) == 0){
+				if(ModificarCliente(listaClientes, listaLocalidad, TAM_CLIENTES, TAM_LISTA_LOCALIDAD) == 0){
 					printf("\nEl cliente fue modificado exitosamente.\n");
 				} else{
 					printf("\nEl cliente no pudo ser modificado.\n");
 				}
 				break;
 			case 3:
-				if(BorrarCliente(listaClientes, TAM_CLIENTES) == 1){
+				if(BorrarCliente(listaClientes, listaLocalidad, TAM_CLIENTES, TAM_LISTA_LOCALIDAD) == 1){
 					printf("\nEl cliente fue eliminado exitosamente.\n");
 				}else{
 					printf("\nNo se pudo eliminar el cliente.\n");
 				}
 				break;
 			case 4:
-				if(CrearPedido(listaPedidos, listaClientes, TAM_PEDIDOS, TAM_CLIENTES, &idPedidos) == 0){
+				if(CrearPedido(listaPedidos, listaClientes, listaLocalidad, TAM_PEDIDOS, TAM_CLIENTES, TAM_LISTA_LOCALIDAD, &idPedidos) == 0){
 					printf("Se creo pedido correctamente\n");
 				}
 			   break;
@@ -78,7 +82,7 @@ int main(void) {
 				}
 			   break;
 			case 6:
-				if(MostrarListaClientesPedidos(listaClientes, listaPedidos, TAM_CLIENTES, TAM_PEDIDOS) == -1){
+				if(MostrarListaClientesPedidos(listaClientes, listaPedidos, listaLocalidad, TAM_CLIENTES, TAM_PEDIDOS, TAM_LISTA_LOCALIDAD) == -1){
 					printf("\nLa lista esta vacia");
 				}
 				break;
@@ -93,7 +97,7 @@ int main(void) {
 				}
 				break;
 			case 9:
-				if(ObtenerCantidadDePedidosPorLocalidad(listaPedidos, listaClientes, TAM_PEDIDOS, TAM_CLIENTES) ==-1){
+				if(ObtenerCantidadDePedidosPorLocalidad(listaPedidos, listaClientes, listaLocalidad, TAM_PEDIDOS, TAM_CLIENTES, TAM_LISTA_LOCALIDAD) ==-1){
 					printf("\nNo hay pedidos para la localidad ingresada\n");
 				}
 				break;
@@ -103,17 +107,17 @@ int main(void) {
 				}
 				break;
 			case 11:
-				if(MostrarClienteConMasPedidosPendientes(listaClientes, listaPedidos, TAM_CLIENTES, TAM_PEDIDOS) == -1){
+				if(MostrarClienteConMasPedidosPendientes(listaClientes, listaPedidos, listaLocalidad, TAM_CLIENTES, TAM_PEDIDOS, TAM_LISTA_LOCALIDAD) == -1){
 					printf("\nOcurrio un error en cliente con pedidos pendientes\n");
 				}
 				break;
 			case 12:
-				if(MostrarClienteConMasPedidosCompletados(listaClientes, listaPedidos, TAM_CLIENTES, TAM_PEDIDOS) == -1){
+				if(MostrarClienteConMasPedidosCompletados(listaClientes, listaPedidos, listaLocalidad, TAM_CLIENTES, TAM_PEDIDOS, TAM_LISTA_LOCALIDAD) == -1){
 					printf("\nOcurrio un error en cliente con pedidos completados\n");
 				}
 				break;
 			case 13:
-				if(MostrarClienteConMasPedidosEnTotal(listaClientes, listaPedidos, TAM_CLIENTES, TAM_PEDIDOS) == -1){
+				if(MostrarClienteConMasPedidosEnTotal(listaClientes, listaPedidos, listaLocalidad, TAM_CLIENTES, TAM_PEDIDOS, TAM_LISTA_LOCALIDAD) == -1){
 					printf("\nOcurrio un error en cliente con pedidos en total\n");
 				}
 				break;

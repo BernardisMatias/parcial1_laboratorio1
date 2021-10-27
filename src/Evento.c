@@ -1,21 +1,21 @@
 #include "evento.h"
 
-
-void CargarDatosHardcoded(ePedido listaPedidos[], eCliente listaClientes[], eRecoleccion listaRecoleccion[], eTipoMaterial listaTipoMaterial[], int tamClientes, int tamPedidos, int tamRecoleccion, int tamTipoMaterial){
+void CargarDatosHardcoded(ePedido listaPedidos[], eCliente listaClientes[], eRecoleccion listaRecoleccion[], eTipoMaterial listaTipoMaterial[], eLocalidad listaLocalidades[], int tamClientes, int tamPedidos, int tamRecoleccion, int tamTipoMaterial, int tamLocalidades){
 	CargarDatosHardcodedPedido(listaPedidos, tamPedidos);
 	CargarDatosHardcodedCliente(listaClientes, tamClientes);
 	CargarDatosHardcodedRecoleccion(listaRecoleccion, tamRecoleccion);
 	CargarDatosHardcodedTipoMaterial(listaTipoMaterial, tamTipoMaterial);
+	CargarDatosHardcodedLocalidad(listaLocalidades, tamLocalidades);
 }
 
-int CrearPedido(ePedido listaPedidos[], eCliente listaClientes[], int tamPedido, int tamClientes, int* id){
+int CrearPedido(ePedido listaPedidos[], eCliente listaClientes[], eLocalidad listaLocalidades[], int tamPedido, int tamClientes, int tamLocalidades, int* id){
 	int result = -2;
 	int index = ObtenerPrimerEspacioLibrePedidos(listaPedidos, tamPedido);
 	if(index == -1){
 		return index;
 	}
 	do{
-		if(MostrarListaClientes(listaClientes, tamClientes) == 0){
+		if(MostrarListaClientes(listaClientes, listaLocalidades, tamClientes, tamLocalidades) == 0){
 			if(GetEntero(&listaPedidos[index].idCliente, "Ingrese ID de Cliente: ", CLIENTE_INIT_ID, MAX_ID_VALUE, MAX_INTENTOS) == -1){
 				break;
 			}
@@ -121,8 +121,9 @@ int GetIdPedidoPorIdCliente(ePedido listaPedidos[], int tamCliente, int idClient
 	return idClienteAux;
 }
 
-int MostrarListaClientesPedidos(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
+int MostrarListaClientesPedidos(eCliente listaClientes[], ePedido listaPedidos[], eLocalidad listaLocalidad[], int tamClientes, int tamPedidos, int tamLocalidad){
     int result = -1, contador = 0;
+    char localidadAux[150];
     printf("\tID\t\tRazon Social\t\tCUIT\t\t\tDireccion\t\tLocalidad\tCant. pedidos 'PENDIENTE'\n");
     for(int i = 0; i < tamClientes; i++){
     	if(listaClientes[i].isEmpty == FULL){
@@ -133,7 +134,8 @@ int MostrarListaClientesPedidos(eCliente listaClientes[], ePedido listaPedidos[]
 					contador++;
 				}
 			}
-			MostrarClientePedido(listaClientes[i], contador);
+			DescripcionLocalidadPorId(localidadAux, listaLocalidad, tamLocalidad, listaClientes[i].idLocalidad);
+			MostrarClientePedido(listaClientes[i], localidadAux, contador);
 			result = 0;
     	}
     	contador = 0;
@@ -141,15 +143,15 @@ int MostrarListaClientesPedidos(eCliente listaClientes[], ePedido listaPedidos[]
     return result;
 }
 
-int MostrarClienteConMasPedidosPendientes(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
+int MostrarClienteConMasPedidosPendientes(eCliente listaClientes[], ePedido listaPedidos[], eLocalidad listaLocalidad[], int tamClientes, int tamPedidos, int tamLocalidad){
 	int result = -1;
 	int flag = 0;
 	int maximo = 0;
 	int actual = 0;
 	eCliente clienteActual;
+	char localidadAux[150];
 	for(int j=0;j<tamPedidos;j++){
-		if(listaPedidos[j].isEmpty == FULL
-				&& strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
+		if(listaPedidos[j].isEmpty == FULL && strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
 			actual = CantidadPedidosPendientesPorCliente(listaPedidos, tamPedidos, listaPedidos[j].idCliente);
 		}
 		if(flag == 0 || actual > maximo){
@@ -160,16 +162,18 @@ int MostrarClienteConMasPedidosPendientes(eCliente listaClientes[], ePedido list
 	}
 	if(maximo != 0){
 		printf("\nCliente con mas pedidos pendientes: \n");
-		MostrarCliente(clienteActual);
+		DescripcionLocalidadPorId(localidadAux, listaLocalidad, tamLocalidad, clienteActual.idLocalidad);
+		MostrarCliente(clienteActual, localidadAux);
 	}
     return result;
 }
 
-int MostrarClienteConMasPedidosCompletados(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
+int MostrarClienteConMasPedidosCompletados(eCliente listaClientes[], ePedido listaPedidos[], eLocalidad listaLocalidad[], int tamClientes, int tamPedidos, int tamLocalidad){
 	int result = -1;
 	int flag = 0;
 	int maximo = 0;
 	int actual = 0;
+	char localidadAux[150];
 	eCliente clienteActual;
 	for(int j=0;j<tamPedidos;j++){
 		if(listaPedidos[j].isEmpty == FULL
@@ -184,16 +188,18 @@ int MostrarClienteConMasPedidosCompletados(eCliente listaClientes[], ePedido lis
 	}
 	if(maximo != 0){
 		printf("\nCliente con mas pedidos completados: \n");
-		MostrarCliente(clienteActual);
+		DescripcionLocalidadPorId(localidadAux, listaLocalidad, tamLocalidad, clienteActual.idLocalidad);
+		MostrarCliente(clienteActual, localidadAux);
 	}
     return result;
 }
 
-int MostrarClienteConMasPedidosEnTotal(eCliente listaClientes[], ePedido listaPedidos[], int tamClientes, int tamPedidos){
+int MostrarClienteConMasPedidosEnTotal(eCliente listaClientes[], ePedido listaPedidos[], eLocalidad listaLocalidad[], int tamClientes, int tamPedidos, int tamLocalidad){
 	int result = -1;
 	int flag = 0;
 	int maximo = 0;
 	int actual = 0;
+	char localidadAux[150];
 	eCliente clienteActual;
 	for(int j=0;j<tamPedidos;j++){
 		if(listaPedidos[j].isEmpty == FULL){
@@ -207,7 +213,8 @@ int MostrarClienteConMasPedidosEnTotal(eCliente listaClientes[], ePedido listaPe
 	}
 	if(maximo != 0){
 		printf("\nCliente con mas pedidos en total: \n");
-		MostrarCliente(clienteActual);
+		DescripcionLocalidadPorId(localidadAux, listaLocalidad, tamLocalidad, clienteActual.idLocalidad);
+		MostrarCliente(clienteActual, localidadAux);
 	}
     return result;
 }
@@ -305,16 +312,21 @@ float ObtenerTotalCantidadKgPp(eRecoleccion listaRecoleccion[], int tamRecolecci
 	return result;
 }
 
-int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaClientes[], int tamPedidos, int tamClientes){
+int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaClientes[], eLocalidad listaLocalidades[], int tamPedidos, int tamClientes, int tamLocalidad){
 	int result = -1, acum = 0;
-	char localidadAux[TAM_LOCALIDAD];
-	char localidadEnLista[TAM_LOCALIDAD];
-	if(GetString(localidadAux, "\nIngrese localidad: ", "Error. Localidad invalida", TAM_LOCALIDAD, 5) == -1){
+	int idLocalidadAux;
+	char localidadEnLista[TAM_DE_LOCALIDAD];
+
+	if(MostrarListaLocalidades(listaLocalidades, tamLocalidad) == -1){
+		printf("\nError, no hay localidades cargadas en el sistema");
+		return result;
+	}
+	if(GetEntero(&idLocalidadAux, "Ingrese una localidad (ID): ", ID_LOCALIDAD_MIN, ID_LOCALIDAD_MAX, 5) == -1){
 		return result;
 	}
 	printf("\n\tLocalidad\t\t\tCant. pedidos\n");
 	for(int i=0;i<tamClientes;i++){
-		if(stricmp(listaClientes[i].localidad.descripcion, localidadAux) == 0){
+		if(idLocalidadAux == listaClientes[i].idLocalidad){
 			for(int j=0;j<tamPedidos;j++){
 				if(listaPedidos[j].idCliente == listaClientes[i].id
 						&& strcmp(listaPedidos[j].estado, "PENDIENTE") == 0){
@@ -322,7 +334,7 @@ int ObtenerCantidadDePedidosPorLocalidad(ePedido listaPedidos[], eCliente listaC
 					acum++;
 				}
 			}
-			strcpy(localidadEnLista, listaClientes[i].localidad.descripcion);
+			DescripcionLocalidadPorId(localidadEnLista, listaLocalidades, tamLocalidad, idLocalidadAux);
 		}
 	}
 	if(acum != 0){
@@ -340,6 +352,161 @@ int ObtenerKgPropilenoPromedioPorCliente(eRecoleccion listaRecoleccion[], eClien
 		result = 0;
 		promedio = totalPp/totalClientes;
 		printf("\nCantidad de Kg. de Polipropileno por cliente: %.2f", promedio);
+	}
+	return result;
+}
+
+int MostrarListaClientes(eCliente listaClientes[], eLocalidad listaLocalidad[], int tam, int tamLocalidad){
+    int retorno = -1;
+    printf("\tID\t\t\tRazon Social\t\tCUIT\t\t\tDireccion\t\tLocalidad\n");
+    char localidad[TAM_DE_LOCALIDAD];
+    for (int i = 0; i < tam; i++){
+      if (listaClientes[i].isEmpty == FULL){
+    	  DescripcionLocalidadPorId(localidad, listaLocalidad, tam, listaClientes[i].idLocalidad);
+    	  MostrarCliente(listaClientes[i], localidad);
+	      retorno = 0;
+	  }
+    }
+    return retorno;
+}
+
+int ObtenerPrimerEspacioLibreCliente(eCliente listaClientes[], int tam){
+	int lugarLibre = -1;
+	for(int i=0;i<tam;i++){
+        if(listaClientes[i].isEmpty == EMPTY){
+            lugarLibre = i;
+            break;
+        }
+    }
+	return lugarLibre;
+}
+
+void CargarDatosHardcodedCliente(eCliente listaClientes[], int tam){
+	int index;
+	eCliente item = {100096, "GRUPO ARCOR SOCIEDAD ANONIMA", "30-70700639-7", "Maipu 1210", 20, FULL};
+	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
+	listaClientes[index] = item;
+	eCliente item2 = {100097, "MERCADO LIBRE LTDA", "30-70988914-8", "Arias 3751", 20, FULL};
+	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
+	listaClientes[index] = item2;
+	eCliente item3 = {100098, "TOYOTA ARGENTINA S A", "33-67913936-9", "Ruta 12 km 81", 50, FULL};
+	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
+	listaClientes[index] = item3;
+	eCliente item4 = {100099, "GOOGLE ARGENTINA S.R.L.", "33-70958522-9", "Av. Alicia Moreau Justo 350", 70, FULL};
+	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
+	listaClientes[index] = item4;
+	eCliente item5 = {100100, "UNILEVER DE ARGENTINA S A", "30-50109269-6", "Tucuman 1", 80, FULL};
+	index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
+	listaClientes[index] = item5;
+}
+
+int ModificarCliente(eCliente listaClientes[], eLocalidad listaLocalidades[], int tam, int tamLocalidades){
+	int idCliente, opcion, posAux;
+	int retorno = -1;
+	int muestraListaClientes = MostrarListaClientes(listaClientes, listaLocalidades, tam, tamLocalidades);
+	if(GetEntero(&idCliente,"Ingrese ID del cliente a modificar: ", CLIENTE_INIT_ID, MAX_ID_VALUE, 5) == -1){
+		return retorno;
+	}
+	posAux = GetPosicionPorId(listaClientes, tam, idCliente);
+	if(posAux == -1){
+		printf("\nCliente inexistente.");
+		return retorno;
+	}
+	if(muestraListaClientes == 0){
+		setbuf(stdout, NULL);
+		printf("\nSe pueden modificar:");
+		printf("\n1. Modificar localidad");
+		printf("\n2. Modificar direccion");
+		printf("\n3. Cancelar");
+		fflush(stdin);
+		GetEntero(&opcion, "\nElija una opcion: ", 1, 3, 5);
+		if(opcion == 1){
+			if(MostrarListaLocalidades(listaLocalidades, tamLocalidades) == -1){
+				printf("\nError, no hay localidades cargadas en el sistema");
+				return retorno;
+			}
+			if(GetEntero(&listaClientes[posAux].idLocalidad, "Ingrese una localidad (ID): ", ID_LOCALIDAD_MIN, ID_LOCALIDAD_MAX, 5) == -1){
+				return retorno;
+			}
+			retorno = 0;
+		} else if(opcion == 2){
+			if(GetString(listaClientes[posAux].direccion, "Ingrese Nueva Direccion: ", "Error. Direccion invalida, por favor reingrese.", TAM_DIRECCION, MAX_INTENTOS) == -1){
+				return retorno;
+			}
+			retorno = 0;
+		}
+     } else if(posAux == -1){
+    	 printf("\nError. Cliente inexistente.");
+     } else{
+		 printf("\nLa lista de clientes esta vacia.");
+	 }
+	 return retorno;
+}
+
+int BorrarCliente(eCliente listaClientes[], eLocalidad listaLocalidades[], int tam, int tamLocalidades){
+   int idCliente, opcion;
+   int result = 0;
+   if(MostrarListaClientes(listaClientes, listaLocalidades, tam, tamLocalidades) == 0){
+	   fflush(stdin);
+	  if(GetEntero(&idCliente,"Ingrese ID del cliente a borrar: ", CLIENTE_INIT_ID, MAX_ID_VALUE, 5) == 0){
+		  int posAux = GetPosicionPorId(listaClientes, tam, idCliente);
+		  if(posAux != -1){
+			  printf("\nEsta seguro de que quiere borrar al cliente?");
+			  printf("\n1. Eliminar cliente");
+			  printf("\n2. Cancelar");
+			  fflush(stdin);
+			  GetEntero(&opcion, "\nElija una opcion: ", 1, 2, 5);
+			  if(opcion == 1){
+				   listaClientes[posAux].isEmpty = EMPTY;
+				   result = 1;
+			  }
+		  } else {
+			  printf("\nError. Cliente inexistente.");
+		  }
+	  } else{
+		  printf("\nError. Cliente inexistente.");
+	  }
+   } else{
+	  printf("\nLa lista de clientes esta vacia.");
+   }
+   return result;
+}
+
+int AltaCliente(eCliente listaClientes[], eLocalidad listaLocalidades[], int tam, int tamLocalidades, int* id){
+	int result = -2;
+	int index = ObtenerPrimerEspacioLibreCliente(listaClientes, tam);
+	if(index == -1){
+		return index;
+	}
+	do {
+		if(GetString(listaClientes[index].razonSocial, "Ingrese Razon Social: ", "Error. Razon social invalida, por favor reingrese.", TAM_RAZON_SOCIAL, MAX_INTENTOS) == -1){
+			break;
+		}
+		fflush(stdin);
+		if(GetCuit(listaClientes[index].cuit, "Ingrese Cuit (sin guiones): ", MAX_INTENTOS) == -1){
+			break;
+		}
+		fflush(stdin);
+		if(MostrarListaLocalidades(listaLocalidades, tamLocalidades) == -1){
+			printf("\nError, no hay localidades cargadas en el sistema");
+			break;
+		}
+		if(GetEntero(&listaClientes[index].idLocalidad, "Ingrese una localidad (ID): ", ID_LOCALIDAD_MIN, ID_LOCALIDAD_MAX, 5) == -1){
+			break;
+		}
+		fflush(stdin);
+		if(GetString(listaClientes[index].direccion, "Ingrese Direccion: ", "Error. Direccion invalida, por favor reingrese.", TAM_DIRECCION, MAX_INTENTOS) == -1){
+			break;
+		}
+		result = 0;
+	} while(result != 0);
+
+
+	if(result == 0){
+		listaClientes[index].id = AutoIncrementarId(id);
+		listaClientes[index].isEmpty = FULL;
+	} else{
+		listaClientes[index].isEmpty = EMPTY;
 	}
 	return result;
 }
